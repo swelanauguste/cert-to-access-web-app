@@ -1,0 +1,18 @@
+services:
+  web:
+    build: ./app
+    command: gunicorn src.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+    expose:
+    - 8000
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:443
+    volumes:
+      - ./certs:/etc/nginx/certs
+      - ./app:/usr/share/nginx/html:ro
+    depends_on:
+      - web
